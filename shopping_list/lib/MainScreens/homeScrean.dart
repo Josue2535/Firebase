@@ -38,7 +38,7 @@ _drawerHome(BuildContext context) {
         //cerrar sesión
         ListTile(
           onTap: () => {
-            LoginGoogleUtils.signInWithGoogle(),
+            LoginGoogleUtils.signInWithGoogle(context: context),
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {

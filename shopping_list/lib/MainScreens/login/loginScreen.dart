@@ -106,7 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: GoogleAuthButton(
                       text: TextApp.GOOGLE_SIGN,
                       onPressed: () async {
-                        User? user = await LoginGoogleUtils.signInWithGoogle();
+                        User? user = await LoginGoogleUtils.signInWithGoogle(
+                            context: context);
                         print(user?.displayName);
                         if (user != null) {
                           Navigator.of(context).push(

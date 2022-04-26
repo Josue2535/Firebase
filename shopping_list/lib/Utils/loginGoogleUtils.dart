@@ -8,29 +8,43 @@ import 'package:google_sign_in/google_sign_in.dart';
 class LoginGoogleUtils {
   static const String TAG = "LoginGoogleUtils";
   static final FirebaseCrashlytics _crashlytics = FirebaseCrashlytics.instance;
-  static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseAuth auth = FirebaseAuth.instance;
   static final GoogleSignIn googleSignIn = GoogleSignIn();
 
   //GOOGLE METHODS
   //signInWithGoogle
-  static Future<User?> signInWithGoogle() async {
+  static Future<User?> signInWithGoogle({required BuildContext context}) async {
     User? user;
-    GoogleSignInAccount? objGoogleSignInAccount = await googleSignIn.signIn();
-    if (objGoogleSignInAccount != null) {
-      GoogleSignInAuthentication objGoogleSignInAuthentication =
-          await objGoogleSignInAccount.authentication;
-      AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: objGoogleSignInAuthentication.accessToken,
-          idToken: objGoogleSignInAuthentication.idToken);
+
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
       try {
-        UserCredential userCredential =
-            await _auth.signInWithCredential(credential);
+        final UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+
         user = userCredential.user;
-        return user;
       } on FirebaseAuthException catch (e) {
-        print("Error al iniciar sesión");
+        if (e.code == 'account-exists-with-different-credential') {
+          // handle the error here
+        } else if (e.code == 'invalid-credential') {
+          // handle the error here
+        }
+      } catch (e) {
+        // handle the error here
       }
     }
+
+    return user;
   }
 
   static Future<User?> _isCurrentSignIn(User user) async {
@@ -38,7 +52,7 @@ class LoginGoogleUtils {
       assert(!user.isAnonymous);
       assert(await user.getIdToken() != null);
 
-      final User? currentUser = _auth.currentUser;
+      final User? currentUser = auth.currentUser;
       assert(user.uid == currentUser?.uid);
 
       //todo a ido bien.
