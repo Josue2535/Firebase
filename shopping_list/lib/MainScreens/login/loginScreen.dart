@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/MainScreens/homeScrean.dart';
 import 'package:shopping_list/MainScreens/login/signUp.dart';
 import 'package:shopping_list/Utils/analythics.dart';
+import 'package:shopping_list/Utils/loginPhoneUtils.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/MyBackButton.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/myLoginButton.dart';
 import 'package:shopping_list/Widgets/Components/Containers/ContainerShape01.dart';
@@ -23,10 +24,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Widget _emailPasswordWidget() {
     return Column(
-      children: <Widget>[
-        MyFieldForm(TextApp.EMAIL_ID, false),
-        MyFieldForm(TextApp.PASSWORD, true)
-      ],
+      children: <Widget>[MyFieldForm(TextApp.PHONE, false)],
     );
   }
 
@@ -70,6 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _phoneController = TextEditingController();
+    final _codeController = TextEditingController();
     final height = MediaQuery.of(context).size.height;
     return SafeArea(
         child: Scaffold(
@@ -93,37 +93,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: height * .05),
-                  child: _emailPasswordWidget(),
                 ),
-                MyLoginButon(TextApp.LOGIN, Colors.white,
-                    Theme.of(context).primaryColorDark, HomeScreen()),
-                _forgottenPassword(),
+                TextFormField(
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(color: Colors.grey)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                          borderSide: BorderSide(color: Colors.grey)),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                      hintText: "Mobile Number"),
+                  controller: _phoneController,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: FlatButton(
+                      child: Text("LOGIN"),
+                      textColor: Colors.blue,
+                      padding: EdgeInsets.all(16),
+                      onPressed: () {
+                        final phone = _phoneController.text.trim();
+
+                        LoginPhoneUtils.loginUser(phone, context);
+                      }),
+                ),
                 _divider(),
-                Center(
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(top: 10, bottom: 10),
-                    child: GoogleAuthButton(
-                      text: TextApp.GOOGLE_SIGN,
-                      onPressed: () async {
-                        User? user = await LoginGoogleUtils.signInWithGoogle(
-                            context: context);
-                        print(user?.displayName);
-                        if (user != null) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                Analythics().logPostCreated();
-                                return HomeScreen();
-                              },
-                            ),
-                          );
-                        }
-                      },
-                      darkMode: false,
-                    ),
-                  ),
-                ),
                 MySignUpLabelButton(
                   TextApp.DONT_HAVE_ACCOUNT,
                   TextApp.SINGUP,

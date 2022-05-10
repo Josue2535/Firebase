@@ -12,4 +12,5 @@ class TextApp {
   static const String I_HAVE_ACCOUNT = '¿Ya tienes una cuenta?';
   static const String USER_NAME = 'Nombre de usuario';
   static const String LOGOUT = 'Cerrar sesión';
+  static const String PHONE = 'Número de celular';
 }

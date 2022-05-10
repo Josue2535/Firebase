@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopping_list/MainScreens/homeScrean.dart';
 import 'package:shopping_list/MainScreens/login/loginSCreen.dart';
 import 'package:shopping_list/MainScreens/login/signUp.dart';
+import 'package:shopping_list/Utils/loginPhoneUtils.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/MyBackButton.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/myLoginButton.dart';
 import 'package:shopping_list/Widgets/Components/Containers/ContainerShape01.dart';
@@ -16,8 +17,11 @@ import '../../Utils/loginGoogleUtils.dart';
 import '../../Widgets/Components/Bottons/mySignUpLabelButton.dart';
 
 class HomeScreen extends StatefulWidget {
+  final User user;
+
+  HomeScreen({required this.user});
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState(user: user);
 }
 
 _drawerHome(BuildContext context) {
@@ -25,20 +29,11 @@ _drawerHome(BuildContext context) {
     child: ListView(
       children: [
         //Drawer
-        DrawerHeader(
-            decoration: BoxDecoration(
-              gradient: DesignWidget.linearGradientMain(context),
-            ),
-            child: CircleAvatar(
-                radius: 10,
-                child: Image(
-                  image: NetworkImage(
-                      LoginGoogleUtils.getUserGoogle()!.photoUrl.toString()),
-                ))),
+
         //cerrar sesión
         ListTile(
           onTap: () => {
-            LoginGoogleUtils.signInWithGoogle(context: context),
+            LoginPhoneUtils.signOut(),
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {
@@ -59,9 +54,35 @@ _drawerHome(BuildContext context) {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final User user;
+
+  _HomeScreenState({required this.user});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(), body: Center(), drawer: _drawerHome(context));
+        appBar: AppBar(),
+        body: Container(
+          padding: EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                "You are Logged in succesfully",
+                style: TextStyle(color: Colors.lightBlue, fontSize: 32),
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                "${user.phoneNumber}",
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+        drawer: _drawerHome(context));
   }
 }
