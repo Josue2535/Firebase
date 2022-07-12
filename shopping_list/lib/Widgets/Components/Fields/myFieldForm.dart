@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class MyFieldForm extends StatelessWidget {
   String _title;
   bool _isPassword = false;
-  MyFieldForm(this._title, this._isPassword);
+  TextEditingController controller;
+  MyFieldForm(this._title, this._isPassword, this.controller);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,6 +24,7 @@ class MyFieldForm extends StatelessWidget {
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
                   filled: true),
+              controller: controller,
             ),
           )
         ],

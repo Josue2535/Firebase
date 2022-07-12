@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shopping_list/Utils/TextApp.dart';
@@ -15,14 +17,38 @@ class SignUp extends StatefulWidget {
   _SignUpState createState() => _SignUpState();
 }
 
+final CollectionReference _users =
+    FirebaseFirestore.instance.collection('users');
+final _email = TextEditingController();
+final _nameUser = TextEditingController();
+final _phone = TextEditingController();
+bool isChecked = false;
+
 class _SignUpState extends State<SignUp> {
   Widget _emailPasswordWidget() {
     var USER_NAME;
     return Column(
       children: <Widget>[
-        MyFieldForm(TextApp.USER_NAME, false),
-        MyFieldForm(TextApp.EMAIL_ID, false),
-        MyFieldForm(TextApp.PASSWORD, true),
+        MyFieldForm(TextApp.USER_NAME, false, _nameUser),
+        MyFieldForm(TextApp.EMAIL_ID, false, _email),
+        MyFieldForm(TextApp.PHONE, false, _phone),
+        SizedBox(
+          width: 10,
+        ), //SizedBox
+        Text(
+          'Terminos y condiciones ',
+          style: TextStyle(fontSize: 17.0),
+        ), //Text
+        SizedBox(width: 10), //SizedBox
+        /** Checkbox Widget **/
+        Checkbox(
+          value: isChecked,
+          onChanged: (bool? value) {
+            setState(() {
+              isChecked = value!;
+            });
+          },
+        ),
       ],
     );
   }
@@ -51,8 +77,77 @@ class _SignUpState extends State<SignUp> {
                     padding: EdgeInsets.only(top: height * .05), //5%
                     child: _emailPasswordWidget(),
                   ),
-                  MyLoginButon(TextApp.SINGUP, Colors.white,
-                      Theme.of(context).primaryColorDark, LoginScreen()),
+                  Container(
+                    width: double.infinity,
+                    child: FlatButton(
+                        child: Text("Registrarse"),
+                        textColor: Colors.blue,
+                        padding: EdgeInsets.all(16),
+                        onPressed: () {
+                          final phone = _phone.text.trim();
+                          final email = _email.text.trim();
+                          final name = _nameUser.text.trim();
+                          if (isChecked != false) {
+                            if (email != "" && phone != "" && name != "") {
+                              _users
+                                  .add({
+                                    phone: {
+                                      'full_name': name, // John Doe
+                                      'email': email, // Stokes and Sons
+                                      'phone': phone
+                                    } // 42
+                                  })
+                                  .then((value) => print("User Added"))
+                                  .catchError((error) =>
+                                      print("Failed to add user: $error"));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text(
+                                      "Tienes que llenar todos los campos"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(ctx).pop();
+                                      },
+                                      child: Container(
+                                        color: Colors.green,
+                                        padding: const EdgeInsets.all(14),
+                                        child: const Text("okay"),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text(
+                                    "No has haceptado terminos y condiciones"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: Container(
+                                      color: Colors.green,
+                                      padding: const EdgeInsets.all(14),
+                                      child: const Text("okay"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }),
+                  ),
                   MySignUpLabelButton(
                     TextApp.I_HAVE_ACCOUNT,
                     TextApp.LOGIN,

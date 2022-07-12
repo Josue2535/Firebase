@@ -44,6 +44,8 @@ dependencies:
   firebase_analytics: ^9.1.5
   firebase_analytics_web: ^0.4.0+10
   firebase_crashlytics: ^2.6.3
+  material: ^1.0.0+2
+  cloud_firestore: ^3.2.1
 
 dev_dependencies:
   flutter_test:

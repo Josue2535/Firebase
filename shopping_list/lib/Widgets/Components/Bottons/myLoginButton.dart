@@ -7,6 +7,7 @@ class MyLoginButon extends StatelessWidget {
   Color _colorText;
   Color _colorButtonBackGround;
   Widget _widgetToNavigate;
+
   MyLoginButon(this._text, this._colorText, this._colorButtonBackGround,
       this._widgetToNavigate);
   @override

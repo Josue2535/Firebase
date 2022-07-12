@@ -4,7 +4,7 @@ class TextApp {
   static const String SINGUP = 'Registrarse';
   static const String BACK = 'Atras';
   static const String EMAIL_ID = 'Email';
-  static const String PASSWORD = 'Atras';
+  static const String PASSWORD = 'Contraseña';
   static const String FORGOT_PASSWORD = '¿Has olvidado a contraseña?';
   static const String OR = 'o';
   static const String GOOGLE_SIGN = 'Inicia sesión con Google';

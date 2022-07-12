@@ -13,11 +13,7 @@ class WelcomeScreen extends StatefulWidget {
 Widget _singUpButton(BuildContext context) {
   return Container(
     width: double.infinity,
-    child: OutlineButton(
-      borderSide: BorderSide(color: Colors.white),
-      highlightedBorderColor: Theme.of(context).primaryColorLight,
-      padding: EdgeInsets.all(15),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+    child: OutlinedButton(
       onPressed: () => Navigator.push(
           context, MaterialPageRoute(builder: (context) => SignUp())),
       child: Text(

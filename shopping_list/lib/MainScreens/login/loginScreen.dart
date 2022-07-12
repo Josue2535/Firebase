@@ -24,7 +24,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Widget _emailPasswordWidget() {
     return Column(
-      children: <Widget>[MyFieldForm(TextApp.PHONE, false)],
+      children: <Widget>[],
     );
   }
 
