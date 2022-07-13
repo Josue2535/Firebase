@@ -4,7 +4,8 @@ class MyFieldForm extends StatelessWidget {
   String _title;
   bool _isPassword = false;
   TextEditingController controller;
-  MyFieldForm(this._title, this._isPassword, this.controller);
+  TextInputType type = TextInputType.emailAddress;
+  MyFieldForm(this._title, this._isPassword, this.controller, this.type);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,6 +20,7 @@ class MyFieldForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: TextField(
+              keyboardType: type,
               obscureText: _isPassword,
               decoration: InputDecoration(
                   border: InputBorder.none,

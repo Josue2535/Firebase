@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shopping_list/Utils/TextApp.dart';
+import 'package:shopping_list/Utils/analythics.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/MyBackButton.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/myLoginButton.dart';
 import 'package:shopping_list/Widgets/Components/Bottons/mySignUpLabelButton.dart';
@@ -29,9 +30,10 @@ class _SignUpState extends State<SignUp> {
     var USER_NAME;
     return Column(
       children: <Widget>[
-        MyFieldForm(TextApp.USER_NAME, false, _nameUser),
-        MyFieldForm(TextApp.EMAIL_ID, false, _email),
-        MyFieldForm(TextApp.PHONE, false, _phone),
+        MyFieldForm(TextApp.USER_NAME, false, _nameUser, TextInputType.name),
+        MyFieldForm(
+            TextApp.EMAIL_ID, false, _email, TextInputType.emailAddress),
+        MyFieldForm(TextApp.PHONE, false, _phone, TextInputType.phone),
         SizedBox(
           width: 10,
         ), //SizedBox
@@ -87,19 +89,90 @@ class _SignUpState extends State<SignUp> {
                           final phone = _phone.text.trim();
                           final email = _email.text.trim();
                           final name = _nameUser.text.trim();
+                          if (!Analythics.emailChek(email)) {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title:
+                                    const Text("El email no esta bien escrito"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: Container(
+                                      color: Colors.green,
+                                      padding: const EdgeInsets.all(14),
+                                      child: const Text("okay"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                            return;
+                          }
+                          if (!Analythics.nameChek(name)) {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text(
+                                    "El nombre no está bien escrito"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: Container(
+                                      color: Colors.green,
+                                      padding: const EdgeInsets.all(14),
+                                      child: const Text("okay"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                            return;
+                          }
+                          if (!Analythics.phoneChek(phone)) {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text(
+                                    "El numero no está bien escrito"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(ctx).pop();
+                                    },
+                                    child: Container(
+                                      color: Colors.green,
+                                      padding: const EdgeInsets.all(14),
+                                      child: const Text("okay"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                            return;
+                          }
                           if (isChecked != false) {
                             if (email != "" && phone != "" && name != "") {
                               _users
-                                  .add({
-                                    phone: {
-                                      'full_name': name, // John Doe
-                                      'email': email, // Stokes and Sons
-                                      'phone': phone
-                                    } // 42
+                                  .doc(phone)
+                                  .set({
+                                    "id": phone,
+                                    'full_name': name, // John Doe
+                                    'email': email, // Stokes and Sons
+                                    'phone': phone
+                                    // 42
                                   })
                                   .then((value) => print("User Added"))
                                   .catchError((error) =>
                                       print("Failed to add user: $error"));
+                              print(_users.orderBy(phone).get());
+                              _email.clear();
+                              _nameUser.clear();
+                              _phone.clear();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

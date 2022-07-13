@@ -94,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: height * .05),
                 ),
-                TextFormField(
+                TextField(
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -113,10 +114,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Text("LOGIN"),
                       textColor: Colors.blue,
                       padding: EdgeInsets.all(16),
-                      onPressed: () {
+                      onPressed: () async {
                         final phone = _phoneController.text.trim();
-
-                        LoginPhoneUtils.loginUser(phone, context);
+                        bool exist = await Analythics.phoneExist(phone);
+                        if (exist) {
+                          LoginPhoneUtils.loginUser("+57 " + phone, context);
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text("No te has registrado"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Container(
+                                    color: Colors.green,
+                                    padding: const EdgeInsets.all(14),
+                                    child: const Text("okay"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
                       }),
                 ),
                 _divider(),
